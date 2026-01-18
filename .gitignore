@@ -10,6 +10,7 @@ ENV/
 # --- VSCode specifc ---
 .vscode
 .history
+.DS_Store
 
 # --- Home Assistant / Add-on Specific ---
 # Ignore any local testing secrets or keys
