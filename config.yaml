@@ -1,0 +1,18 @@
+name: "Thermowatt Smart Boiler"
+description: "Cloud-to-Local bridge for Thermowatt / Ariston water heaters."
+version: "1.0.1"
+slug: "thermowatt_boiler"
+arch:
+  - aarch64
+  - amd64
+  - armv7
+init: false
+options:
+  email: ""
+  password: ""
+schema:
+  email: str
+  password: password
+mqtt: true
+services:
+  - mqtt:need
