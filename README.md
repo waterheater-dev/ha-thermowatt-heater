@@ -56,14 +56,14 @@ OK: Step 8 - Beginning 60s polling loop.
 
 ## Known to work on:
 
-**Home Assistant:**
-_Installation method:_ Home Assistant OS
-_Core:_ 2025.12.5
-_Supervisor:_ 2026.01.1
-_Operating System:_ 16.3
-_Frontend:_ 20251203.3
-**Mosquitto MQTT Version:** 6.5.2
-**MyThermowatt App Version:** 3.14
+- **Home Assistant:**
+  - _Installation method:_ `Home Assistant OS`
+  - _Core:_ `2025.12.5`
+  - _Supervisor:_ `2026.01.1`
+  - _Operating System:_ `16.3`
+  - _Frontend:_ `20251203.3`
+- **Mosquitto MQTT Version:** `6.5.2`
+- **MyThermowatt App Version:** `3.14`
 
 Tip: Help others by adding your version here, if it works.
 
