@@ -90,7 +90,7 @@ class MyThermowattBridge:
             
             # Ignore AWS status updates for X seconds after sending a command
             # to prevent stale values from overwriting optimistic updates
-            COMMAND_COOLDOWN = 15  # seconds
+            COMMAND_COOLDOWN = 32  # seconds
             if sn in self.last_command_time:
                 time_since_command = time.time() - self.last_command_time[sn]
                 if time_since_command < COMMAND_COOLDOWN:
