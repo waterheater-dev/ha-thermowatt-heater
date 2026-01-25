@@ -16,10 +16,10 @@ MQTT_PASS = os.getenv("MQTT_PASSWORD")
 # AWS IoT MQTT Configuration
 AWS_HOST = "a29wru6dvi3p6q-ats.iot.eu-west-1.amazonaws.com"
 AWS_PORT = 8883
-CERT_DIR = os.path.dirname(os.path.abspath(__file__))
-AWS_ROOT_CA = os.path.join(CERT_DIR, "root.pem")
-AWS_CERT = os.path.join(CERT_DIR, "client.crt")
-AWS_KEY = os.path.join(CERT_DIR, "client.key")
+# Certificates are copied to root in Dockerfile
+AWS_ROOT_CA = "/root.pem"
+AWS_CERT = "/client.crt"
+AWS_KEY = "/client.key"
 
 class MyThermowattBridge:
     API_KEY = "YVjArWssxKH631jv1dnnWOTr6gijsSAGz7rQJ4hJoUNRffxYvbQaMbePBEZalena"
