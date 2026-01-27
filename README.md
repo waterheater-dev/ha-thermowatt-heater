@@ -30,6 +30,40 @@ password: "your-password"
 
 Once the add-on is running, a new entity will appear under your MQTT integration. We recommend using the Thermostat Card for the best experience.
 
+### Custom Thermostat Card
+
+This addon includes a standalone custom thermostat card (located in `www/thermostat-card/`) that displays exactly like Home Assistant's default thermostat card. The card supports both `climate` and `water_heater` entities and is perfect for controlling your Thermowatt boiler.
+
+**Option 1: Use the Standalone Custom Card (Recommended for Customization)**
+
+Install the standalone card included with this addon:
+
+1. Copy `www/thermostat-card/thermowatt-thermostat-card.js` to your Home Assistant `www` directory (`/config/www/`)
+2. Add it as a Lovelace resource: Settings → Dashboards → Resources → Add `/local/thermowatt-thermostat-card.js` (type: JavaScript Module)
+3. Use it in your dashboard:
+
+```yaml
+type: custom:thermowatt-thermostat-card
+entity: water_heater.thermowatt_boiler_12345
+name: "My Boiler"
+```
+
+See `www/thermostat-card/README.md` for detailed installation instructions.
+
+**Option 2: Use Home Assistant's Built-in Card**
+
+Home Assistant includes a thermostat card by default. Simply add it to your Lovelace dashboard:
+
+```yaml
+type: thermostat
+entity: water_heater.thermowatt_boiler_12345
+name: "My Boiler"
+```
+
+**Customization:**
+
+The standalone card source code (`thermowatt-thermostat-card.js`) is ready for customization. The original Home Assistant TypeScript source (`hui-thermostat-card.ts`) is also included for reference.
+
 ## Troubleshooting
 
 The add-on will log each step of its boot cycle, so that in case of a problem, you will be aware of exactly which step failed. A healthy log should look like this:

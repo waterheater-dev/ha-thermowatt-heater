@@ -143,6 +143,8 @@ class MyThermowattBridge:
             ),
             "mode_command_topic": f"P/{serial}/CMD/MODE",
             "modes": ["Off", "Eco", "Manual", "Auto", "Holiday"],
+            "json_attributes_topic": f"P/{serial}/STATUS",
+            "json_attributes_template": "{{ value_json.result | tojson }}",
             "device": {"identifiers": [f"tw_{serial}"], "manufacturer": "Thermowatt", "name": name}
         }
         self.mqtt_client.publish(topic, json.dumps(payload), retain=True)
@@ -226,6 +228,9 @@ class MyThermowattBridge:
             mqtt_status = status.get('result', {})
             for k, v in overrides.items():
                 mqtt_status[k] = str(v)
+            # Compute and add heating status (bit 0 of WaterHeaterSts)
+            water_heater_sts = int(mqtt_status.get('WaterHeaterSts', 0))
+            mqtt_status['heating'] = (water_heater_sts & 1) != 0
             # Publish the full response format (with 'result' wrapper) to match HA templates
             self.mqtt_client.publish(f"P/{serial}/STATUS", json.dumps(status), retain=True)
         except Exception as e:
@@ -238,8 +243,15 @@ class MyThermowattBridge:
             status_code = r.status_code
             
             if status_code == 200:
-                # Publish to MQTT
-                self.mqtt_client.publish(f"P/{serial}/STATUS", r.text, retain=True)
+                # Parse JSON and add computed heating status
+                status_data = r.json()
+                if 'result' in status_data:
+                    water_heater_sts = int(status_data['result'].get('WaterHeaterSts', 0))
+                    # Heating is active if bit 0 is set (matches manufacturer's app logic)
+                    status_data['result']['heating'] = (water_heater_sts & 1) != 0
+                
+                # Publish to MQTT with computed field
+                self.mqtt_client.publish(f"P/{serial}/STATUS", json.dumps(status_data), retain=True)
                 return (True, status_code)
             else:
                 # Return status code for handling in main loop
