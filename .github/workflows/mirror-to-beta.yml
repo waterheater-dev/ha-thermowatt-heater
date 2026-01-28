@@ -1,0 +1,38 @@
+name: Mirror dev to beta repo
+
+on:
+  push:
+    branches: ["dev"]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mirror-to-beta-dev
+  cancel-in-progress: true
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout dev (full history)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Mirror to beta repo (force update)
+        env:
+          BETA_REPO_TOKEN: ${{ secrets.BETA_REPO_TOKEN }}
+          BETA_REPO: "waterheater-dev/ha-thermowatt-heater-beta"
+          SOURCE_BRANCH: "dev"
+          TARGET_BRANCH: "main"
+        run: |
+          set -euo pipefail
+
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git remote add beta "https://x-access-token:${BETA_REPO_TOKEN}@github.com/${BETA_REPO}.git"
+
+          git push --force --prune beta "refs/heads/${SOURCE_BRANCH}:refs/heads/${TARGET_BRANCH}"
