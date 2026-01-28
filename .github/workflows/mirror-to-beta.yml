@@ -32,7 +32,10 @@ jobs:
 
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
+          if [ -z "${BETA_REPO_TOKEN}" ]; then
+            echo "BETA_REPO_TOKEN missing (secret not available to this run)"
+            exit 1
+          fi
           git remote add beta "https://x-access-token:${BETA_REPO_TOKEN}@github.com/${BETA_REPO}.git"
 
           git push --force --prune beta "refs/heads/${SOURCE_BRANCH}:refs/heads/${TARGET_BRANCH}"
