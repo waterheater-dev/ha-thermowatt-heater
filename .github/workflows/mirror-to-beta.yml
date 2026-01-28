@@ -40,4 +40,10 @@ jobs:
           echo "token_length=${#BETA_REPO_TOKEN}"
           git remote -v
           git remote get-url beta
+          case "${BETA_REPO_TOKEN}" in
+            ghs_*) echo "TOKEN_TYPE=GITHUB_TOKEN (ghs_*)" ;;
+            github_pat_*) echo "TOKEN_TYPE=FINE_GRAINED_PAT (github_pat_*)" ;;
+            ghp_*) echo "TOKEN_TYPE=CLASSIC_PAT (ghp_*)" ;;
+            *) echo "TOKEN_TYPE=UNKNOWN_PREFIX" ;;
+          esac
           git push --force --prune beta "refs/heads/${SOURCE_BRANCH}:refs/heads/${TARGET_BRANCH}"
