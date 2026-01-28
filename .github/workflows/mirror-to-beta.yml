@@ -37,5 +37,7 @@ jobs:
             exit 1
           fi
           git remote add beta "https://x-access-token:${BETA_REPO_TOKEN}@github.com/${BETA_REPO}.git"
-
+          echo "token_length=${#BETA_REPO_TOKEN}"
+          git remote -v
+          git remote get-url beta
           git push --force --prune beta "refs/heads/${SOURCE_BRANCH}:refs/heads/${TARGET_BRANCH}"
