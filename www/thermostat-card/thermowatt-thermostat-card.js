@@ -528,4 +528,18 @@ class ThermowattThermostatCard extends HTMLElement {
   }
 }
 
+// Register the custom element
 customElements.define("thermowatt-thermostat-card", ThermowattThermostatCard);
+
+// Register with Home Assistant's card registry so it appears in the UI picker
+// This allows the card to show up in the "Add Card" dialog
+if (window.customCards === undefined) {
+  window.customCards = [];
+}
+window.customCards.push({
+  type: "custom:thermowatt-thermostat-card",
+  name: "Thermowatt Thermostat Card",
+  description: "Thermostat card with heating status indicator for Thermowatt water heaters",
+  preview: true,
+  documentationURL: "https://github.com/waterheater-dev/ha-thermowatt-heater",
+});

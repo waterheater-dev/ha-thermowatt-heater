@@ -13,28 +13,67 @@ A standalone custom Lovelace card for Home Assistant that displays and controls 
 
 ## Installation
 
-### Step 1: Copy the Card File
+### Step 1: Download the Card File
 
-Copy `thermowatt-thermostat-card.js` to your Home Assistant `www` directory:
+**Download from GitHub:**
+1. Go to: https://github.com/waterheater-dev/ha-thermowatt-heater
+2. Navigate to `www/thermostat-card/thermowatt-thermostat-card.js`
+3. Click the **Raw** button (top right)
+4. Right-click → **Save As** → save as `thermowatt-thermostat-card.js`
 
+**Direct download link:**  
+[thermowatt-thermostat-card.js](https://raw.githubusercontent.com/waterheater-dev/ha-thermowatt-heater/main/www/thermostat-card/thermowatt-thermostat-card.js)
+
+### Step 2: Copy to Home Assistant
+
+You need to copy the file to your Home Assistant's `www` directory (`/config/www/`). Choose the method that works best for you:
+
+**Method A: File Editor Add-on (Recommended)**
+1. Install **File Editor** add-on if needed (Settings → Add-ons → Add-on Store)
+2. Open File Editor
+3. Navigate to `/config/www/` (create the `www` folder if it doesn't exist)
+4. Click **Upload** or create new file `thermowatt-thermostat-card.js`
+5. Paste the file contents and save
+
+**Method B: Samba Share**
+1. Enable **Samba share** add-on (Settings → Add-ons)
+2. Access `\\homeassistant.local\config` from Windows or `smb://homeassistant.local/config` from Mac
+3. Navigate to `www` folder (create if needed)
+4. Copy `thermowatt-thermostat-card.js` into it
+
+**Method C: SSH/Command Line**
 ```bash
-# If using Home Assistant OS or Supervised
-# The www directory is typically at: /config/www/
+# Create www directory if it doesn't exist
+mkdir -p /config/www
 
-cp thermowatt-thermostat-card.js /config/www/
+# Copy the file (adjust the source path to where you downloaded it)
+cp /path/to/downloaded/thermowatt-thermostat-card.js /config/www/
 ```
 
-Or if you're accessing via Samba/network share, copy it to the `www` folder in your Home Assistant configuration directory.
+**Method D: Using Home Assistant Terminal Add-on**
+1. Install **Terminal & SSH** add-on
+2. Open terminal
+3. Run:
+   ```bash
+   mkdir -p /config/www
+   # Then use wget or curl to download directly:
+   wget -O /config/www/thermowatt-thermostat-card.js https://raw.githubusercontent.com/waterheater-dev/ha-thermowatt-heater/main/www/thermostat-card/thermowatt-thermostat-card.js
+   ```
 
-### Step 2: Add as Lovelace Resource
+### Step 3: Add as Lovelace Resource
 
-1. Go to **Settings** → **Dashboards** → **Resources** (or **Developer Tools** → **Resources**)
-2. Click **+ ADD RESOURCE** (bottom right)
-3. Enter the URL: `/local/thermowatt-thermostat-card.js`
-4. Set the resource type to **JavaScript Module**
+1. In Home Assistant, go to **Settings** → **Dashboards** → **Resources**
+   - Alternative path: **Developer Tools** → **Resources** tab
+2. Click the **+ ADD RESOURCE** button (bottom right corner)
+3. In the URL field, enter: `/local/thermowatt-thermostat-card.js`
+   - ⚠️ Important: The URL must start with `/local/` (not `/www/` or `/config/www/`)
+4. Set the resource type dropdown to **JavaScript Module**
 5. Click **CREATE**
+6. **Refresh your browser** (Ctrl+F5 on Windows/Linux, Cmd+Shift+R on Mac)
 
-### Step 3: Use in Your Dashboard
+**Verify it's added:** You should see `thermowatt-thermostat-card.js` in your resources list.
+
+### Step 4: Use in Your Dashboard
 
 Add the card to your Lovelace dashboard:
 
@@ -47,11 +86,26 @@ theme: default  # Optional
 ```
 
 **Via UI:**
-1. Edit your dashboard
-2. Click **+ ADD CARD**
-3. Scroll down and select **Custom: Thermowatt Thermostat Card**
-4. Select your entity
-5. Configure as needed
+1. Go to your dashboard and click the **three dots** (⋮) → **Edit Dashboard**
+2. Click **+ ADD CARD** (or click **+** in an empty spot)
+3. Scroll down in the card picker and look for **Thermowatt Thermostat Card** or **Custom: Thermowatt Thermostat Card**
+   - ⚠️ **If you don't see it:** Try adding it via YAML first (see below), then it should appear in future card additions
+   - Make sure you completed Step 3 and **hard refreshed** your browser (Ctrl+F5 or Cmd+Shift+R)
+4. Select your water heater entity from the dropdown
+5. Optionally set a custom name
+6. Click **SAVE**
+
+**Alternative: Add via YAML Editor (If card doesn't appear in UI):**
+1. Go to your dashboard → **three dots** (⋮) → **Edit Dashboard**
+2. Click **three dots** on any card → **Edit Card** → Switch to **YAML mode** (top right)
+3. Or click **three dots** → **Raw configuration editor**
+4. Add the card configuration:
+   ```yaml
+   type: custom:thermowatt-thermostat-card
+   entity: water_heater.thermowatt_boiler_12345
+   name: "My Boiler"
+   ```
+5. Save and refresh
 
 ## Configuration
 
@@ -99,21 +153,34 @@ www/thermostat-card/
 
 ## Troubleshooting
 
-**Card not showing:**
-- Make sure the file is in `/config/www/`
-- Verify the resource is added and type is "JavaScript Module"
-- Check browser console for errors
-- Clear browser cache
+**Card doesn't appear in card picker:**
+- ✅ Verify the file is in `/config/www/thermowatt-thermostat-card.js` (not in a subfolder)
+- ✅ Check that the resource is added: Settings → Dashboards → Resources
+- ✅ Make sure resource URL is exactly `/local/thermowatt-thermostat-card.js`
+- ✅ Verify resource type is set to **JavaScript Module**
+- ✅ **Hard refresh your browser** (Ctrl+F5 on Windows/Linux, Cmd+Shift+R on Mac)
+- ✅ Clear browser cache completely
+- ✅ Check browser console (F12 → Console tab) for JavaScript errors
+- ✅ **Workaround:** Add the card via YAML mode first (see Step 4 instructions above), then it may appear in future UI additions
+- ✅ Try restarting Home Assistant if nothing else works
 
-**Entity not found:**
-- Verify the entity ID is correct
-- Make sure the entity is a `climate` or `water_heater` entity
-- Check that the entity is available in Home Assistant
+**Card shows but displays "Entity not found":**
+- ✅ Verify the entity ID is correct (check Settings → Devices & Services → MQTT)
+- ✅ Make sure the entity is a `climate` or `water_heater` entity
+- ✅ Check that the Thermowatt addon is running and has discovered your device
+- ✅ Wait a few minutes after starting the addon for entities to appear
 
 **Temperature control not working:**
-- Ensure the entity supports temperature control
-- Check entity attributes: `min_temp`, `max_temp`, `temperature`
-- Verify you have permission to call services on the entity
+- ✅ Ensure the entity supports temperature control
+- ✅ Check entity attributes in Developer Tools → States
+- ✅ Verify you have permission to call services on the entity
+- ✅ Check addon logs for any MQTT errors
+
+**Still having issues?**
+- Check the browser console (F12 → Console tab) for error messages
+- Verify file permissions: the file should be readable by Home Assistant
+- Try removing and re-adding the resource
+- Make sure you're using the latest version of the card file
 
 ## License
 

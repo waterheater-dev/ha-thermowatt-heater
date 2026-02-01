@@ -32,23 +32,85 @@ Once the add-on is running, a new entity will appear under your MQTT integration
 
 ### Custom Thermostat Card
 
-This addon includes a standalone custom thermostat card (located in `www/thermostat-card/`) that displays exactly like Home Assistant's default thermostat card. The card supports both `climate` and `water_heater` entities and is perfect for controlling your Thermowatt boiler.
+This addon includes a standalone custom thermostat card that displays exactly like Home Assistant's default thermostat card, with added heating status indicator. The card supports both `climate` and `water_heater` entities and is perfect for controlling your Thermowatt boiler.
 
-**Option 1: Use the Standalone Custom Card (Recommended for Customization)**
+**Option 1: Use the Standalone Custom Card (Recommended)**
 
-Install the standalone card included with this addon:
+The custom card file is located in the addon repository at `www/thermostat-card/thermowatt-thermostat-card.js`. To install it:
 
-1. Copy `www/thermostat-card/thermowatt-thermostat-card.js` to your Home Assistant `www` directory (`/config/www/`)
-2. Add it as a Lovelace resource: Settings → Dashboards → Resources → Add `/local/thermowatt-thermostat-card.js` (type: JavaScript Module)
-3. Use it in your dashboard:
+#### Step 1: Download the Card File
 
-```yaml
-type: custom:thermowatt-thermostat-card
-entity: water_heater.thermowatt_boiler_12345
-name: "My Boiler"
-```
+1. Go to the [addon repository on GitHub](https://github.com/waterheater-dev/ha-thermowatt-heater)
+2. Navigate to `www/thermostat-card/thermowatt-thermostat-card.js`
+3. Click the **Raw** button to view the file
+4. Right-click and **Save As** → save it as `thermowatt-thermostat-card.js`
 
-See `www/thermostat-card/README.md` for detailed installation instructions.
+Or download directly: [thermowatt-thermostat-card.js](https://raw.githubusercontent.com/waterheater-dev/ha-thermowatt-heater/main/www/thermostat-card/thermowatt-thermostat-card.js)
+
+#### Step 2: Copy to Home Assistant
+
+**Method A: Using File Editor Add-on (Easiest)**
+1. Install the **File Editor** add-on if you haven't already
+2. Open File Editor
+3. Navigate to `/config/www/` folder
+4. If the `www` folder doesn't exist, create it
+5. Click **Upload** or create a new file named `thermowatt-thermostat-card.js`
+6. Paste the contents of the downloaded file and save
+
+**Method B: Using Samba Share**
+1. Enable Samba share in Home Assistant (Settings → Add-ons → Samba share)
+2. Access your Home Assistant via network share (e.g., `\\homeassistant.local\config`)
+3. Navigate to the `www` folder (create it if it doesn't exist)
+4. Copy `thermowatt-thermostat-card.js` into the `www` folder
+
+**Method C: Using SSH**
+1. Enable SSH add-on or use SSH access
+2. Copy the file:
+   ```bash
+   # Create www directory if it doesn't exist
+   mkdir -p /config/www
+   
+   # Copy the file (adjust path as needed)
+   cp /path/to/thermowatt-thermostat-card.js /config/www/
+   ```
+
+#### Step 3: Add as Lovelace Resource
+
+1. In Home Assistant, go to **Settings** → **Dashboards** → **Resources**
+   - (Alternative: **Developer Tools** → **Resources** tab)
+2. Click **+ ADD RESOURCE** button (bottom right)
+3. Enter the URL: `/local/thermowatt-thermostat-card.js`
+4. Set the resource type to **JavaScript Module**
+5. Click **CREATE**
+6. Refresh your browser (Ctrl+F5 or Cmd+Shift+R)
+
+#### Step 4: Use in Your Dashboard
+
+**Via UI:**
+1. Edit your dashboard (click the three dots → Edit Dashboard)
+2. Click **+ ADD CARD**
+3. Scroll down and look for **Thermowatt Thermostat Card** or **Custom: Thermowatt Thermostat Card**
+   - ⚠️ **If you don't see it:** Use the YAML method below instead
+4. Select your water heater entity
+5. Configure name and other options
+6. Click **SAVE**
+
+**Via YAML (Always Works):**
+1. Edit your dashboard → Click **three dots** on any card → **Raw configuration editor**
+2. Or edit a card → Switch to **YAML mode** (top right)
+3. Add the card configuration:
+   ```yaml
+   type: custom:thermowatt-thermostat-card
+   entity: water_heater.thermowatt_boiler_12345
+   name: "My Boiler"
+   ```
+4. Save and refresh
+
+**Troubleshooting:**
+- If the card doesn't appear, make sure the file is in `/config/www/` (not `/config/www/thermostat-card/`)
+- Verify the resource URL is exactly `/local/thermowatt-thermostat-card.js`
+- Clear browser cache and refresh
+- Check browser console (F12) for any errors
 
 **Option 2: Use Home Assistant's Built-in Card**
 
@@ -60,9 +122,14 @@ entity: water_heater.thermowatt_boiler_12345
 name: "My Boiler"
 ```
 
-**Customization:**
+**Note:** The built-in card works great, but the custom card includes a heating status indicator (flame icon) that shows when the boiler is actively heating.
 
-The standalone card source code (`thermowatt-thermostat-card.js`) is ready for customization. The original Home Assistant TypeScript source (`hui-thermostat-card.ts`) is also included for reference.
+---
+
+**Need Help?**
+
+- See detailed installation guide: [`www/thermostat-card/README.md`](https://github.com/waterheater-dev/ha-thermowatt-heater/blob/main/www/thermostat-card/README.md)
+- The card file is also available in the addon repository: `www/thermostat-card/thermowatt-thermostat-card.js`
 
 ## Troubleshooting
 
