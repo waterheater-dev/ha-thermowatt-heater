@@ -1,6 +1,6 @@
 name: "Thermowatt Smart Boiler"
 description: "Cloud-to-Local bridge for Thermowatt / Ariston water heaters."
-version: "1.2.0"
+version: "1.3.0"
 slug: "thermowatt_boiler"
 arch:
   - aarch64

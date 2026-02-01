@@ -43,27 +43,31 @@ s6-rc: info: service legacy-cont-init: starting
 s6-rc: info: service legacy-cont-init successfully started
 s6-rc: info: service legacy-services: starting
 s6-rc: info: service legacy-services successfully started
-[12:20:09] INFO: Starting Thermowatt Bridge for <email@example.com>...
+[21:51:03] INFO: Starting Thermowatt Bridge for <email@example.com>...
 --- BOOT SEQUENCE START ---
 OK: Step 1 - Credentials present.
 OK: Step 2 & 3 - Connected and authenticated with local MQTT.
 OK: Step 4 - Logged in to Thermowatt backend.
-OK: Step 5 - Found 1 thermostats. Using: Home
-OK: Step 6 - Successfully fetched initial status.
-OK: Step 7 - Booted successfully.
-OK: Step 8 - Beginning 60s polling loop.
+OK: Step 5 - Found 1 thermostats.
+🌉 Bridge active for: Home (3012340231805353)
+OK: Step 6 - Booted successfully.
+OK: Step 7 - Starting polling loop (interval: 20s).
+[STATUS] Polled 16 times, got 16 x 200, 0 errors
+[STATUS] Polled 15 times, got 15 x 200, 0 errors
+[STATUS] Polled 15 times, got 15 x 200, 0 errors
+[STATUS] Polled 15 times, got 15 x 200, 0 errors
 ```
 
 ## Known to work on:
 
 - **Home Assistant:**
-  - _Installation method:_ `Home Assistant OS`
-  - _Core:_ `2025.12.5`
-  - _Supervisor:_ `2026.01.1`
-  - _Operating System:_ `16.3`
-  - _Frontend:_ `20251203.3`
-- **Mosquitto MQTT Version:** `6.5.2`
-- **MyThermowatt App Version:** `3.14`
+  - _Installation method:_ Home Assistant OS
+  - _Core:_ 2025.12.5
+  - _Supervisor:_ 2026.01.1
+  - _Operating System:_ 16.3
+  - _Frontend:_ 20251203.3
+- **Mosquitto MQTT Version:** 6.5.2
+- **MyThermowatt App Version:** 3.14
 
 Tip: Help others by adding your version here, if it works.
 

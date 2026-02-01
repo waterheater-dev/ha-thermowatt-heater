@@ -1,0 +1,57 @@
+name: Mirror dev to beta repo
+
+on:
+  push:
+    branches: ["dev"]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mirror-to-beta-dev
+  cancel-in-progress: true
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout dev (full history)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Mirror to beta repo (force update)
+        env:
+          BETA_REPO_TOKEN: ${{ secrets.BETA_REPO_TOKEN }}
+          BETA_REPO: "waterheater-dev/ha-thermowatt-heater-beta"
+          SOURCE_BRANCH: "dev"
+          TARGET_BRANCH: "main"
+        run: |
+          set -euo pipefail
+
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -z "${BETA_REPO_TOKEN}" ]; then
+            echo "BETA_REPO_TOKEN missing (secret not available to this run)"
+            exit 1
+          fi
+          token_login="$(
+            curl -sS \
+              -H "Authorization: Bearer ${BETA_REPO_TOKEN}" \
+              -H "Accept: application/vnd.github+json" \
+              https://api.github.com/user | jq -r '.login'
+          )"
+          echo "token_login=${token_login}"
+          git config --unset-all http.https://github.com/.extraheader || true
+          git remote add beta "https://x-access-token:${BETA_REPO_TOKEN}@github.com/${BETA_REPO}.git"
+          echo "token_length=${#BETA_REPO_TOKEN}"
+          git remote -v
+          git remote get-url beta
+          case "${BETA_REPO_TOKEN}" in
+            ghs_*) echo "TOKEN_TYPE=GITHUB_TOKEN (ghs_*)" ;;
+            github_pat_*) echo "TOKEN_TYPE=FINE_GRAINED_PAT (github_pat_*)" ;;
+            ghp_*) echo "TOKEN_TYPE=CLASSIC_PAT (ghp_*)" ;;
+            *) echo "TOKEN_TYPE=UNKNOWN_PREFIX" ;;
+          esac
+          git push --force --prune beta "refs/heads/${SOURCE_BRANCH}:refs/heads/${TARGET_BRANCH}"

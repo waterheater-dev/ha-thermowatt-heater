@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-01-27
+
+### Removed
+
+- AWS MQTT bridge for real-time status updates
+- Certificate-based AWS IoT authentication
+
+### Added
+
+- Added polling loop to avoid rate limiting issues
+
+### Fixed
+
+- Rate limiting issues from frequent API polling, by performing polling in the correct, acceptable way.
+
+---
+
 ## [1.2.0] - 2026-01-25
 
 ### Added
